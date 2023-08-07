@@ -99,8 +99,8 @@ void loop()
   if (!resetButtonPressed){
       Serial.println("Resetbutton pressed");
       encoderPos = 0;
-      Serial.println("Index:");
-      Serial.prinln(encoderPos, DEC);
+      Serial.print("Index:");
+      Serial.println(encoderPos, DEC);
       }
       
   do
