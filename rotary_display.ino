@@ -1,4 +1,5 @@
-/* Arduino-Sketch zur Bestimmung der Schwerttiefe der Eule
+/* Arduino-Sketch zur Bestimmung der Schwerttiefe des
+ * Segelbootes Eule
  *  
  * Basis ist ein ARDUINO Nano, ein Drehencoders Az-Delivery KY-040 
  * und ein Display Nokia 5110
@@ -17,7 +18,7 @@
  * 
  * Die Daten werden auf ein Display Nokia 5110 ausgegeben.
  * (c) 2013 +++ Filip Stoklas, aka FipS, http://www.4FipS.com +++
- * ARTICLE URL: http://forums.4fips.com/viewtopic.php?f=3&t=1086
+ * ARTIKEL URL: http://forums.4fips.com/viewtopic.php?f=3&t=1086
  * Arduino Nano SPI Com: SCK = 13, MOSI = 11, CS = 10, A0 = 9, Reset = 8
  * 
  * LCD            note                            Arduino
@@ -33,14 +34,52 @@
 * 
 */
 
-#define encoderPinA 2  // Port for encoder
-#define encoderPinB 3  // Port for encoder
-#define switchPin 4    // Port for resetswitch to reset counter
+
+/*
+Anmerkungen: 
+
+Endpositionsauswertung muss noch implementiert werden.
+
+Fuer die Berechnung der Schwerttiefe muss der Endwert
+bestimmt werden um damit die Umrechnung durchfuehren
+zu koennen.
+
+Wenn die Endposition des Schwertes erreicht wird, 
+soll der Motor durch eine Unterbrechung der Stromversorgung
+gestoppt werden. Der Motor läuft etwas nach. Damit würde eine
+Abfrage der Position des Schwertes immer eine Ueberschreitung
+des Grenzwertes ergeben und den Motorstopp aktivieren. Damit
+wird der Motor dauerhaft ausgeschaltet. 
+Kann evtl. auch nur der Endpunkt signalisiert werden, z.B. 
+durch ein Piepen oder durch eine LED?
+
+Die Position des Schwertes soll abgespeichert werden, damit 
+nach einem Stromausfall mit der Zwischengespeicherten 
+Position weitergearbeitet werden kann. Wie speichert man die 
+Postion? Im Flashspeicher waere eine Moeglichkeit. Der 
+Flashspeicher kann aber nur ca. 10.000 mal beschrieben 
+werden. Abhaengig davon, ob Vibrationen auftreten und dadurch 
+staendig neue Werte in den Flashspeicher geschrieben werden,
+kann innerhalb weniger Tage der Flashspeicher kaputt sein.
+Alternativen: Das Schwert muss nachdem der Strom wieder-
+hergestellt wurde neu kalibriert werden. 
+Über eine Echtzeituhr, welche etwas RAM zur Verfuegung stellt,
+kann der Wert im RAM gespeichert werden. Die Batterie der Echt-
+zeituhr muss nach Entleerung gewechselt werden und es muss 
+neu kalibiert werden.
+
+*/
+
 #include "U8glib.h"
 
-volatile unsigned int encoderPos = 0;  // a counter for the dial
-unsigned int lastReportedPos = 1;   // change management
-static boolean rotating=false;      // debounce management
+#define encoderPinA 2  // Port A fuer den Drehencoder
+#define encoderPinB 3  // Port B fuer den Drehencoder
+#define switchPin 4    // Port fuer den Entlagenschalter, welcher den Motor ausschaltet in Nullposition
+
+
+volatile unsigned int encoderPos = 0;  // Zaehler für die Encoderposition
+unsigned int lastReportedPos = 1;   // Change Mnagement, hat sich die Positon geaendert
+static boolean rotating=false;      // Debounce Management
 
 // interrupt service routine vars
 boolean A_set = false;            
@@ -96,7 +135,7 @@ void loop()
   }
   
   bool resetButtonPressed = digitalRead(switchPin);
-  if (!resetButtonPressed){
+  if (!resetButtonPressed){ //Print message to serialterminal
       Serial.println("Resetbutton pressed");
       encoderPos = 0;
       Serial.print("Index:");
