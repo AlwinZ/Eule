@@ -182,5 +182,6 @@ void calculateSword()
   // Hier kommt die Berechnung der Schwerttiefe rein
   // Die Drehencoderposition wird per 3-Satz in eine
   // Laenge umgerechnet und als Wert zurueckgegeben.
+  // Schwerttiefe = (MaxSchwerttiefe x Count) / MaxCount
   
 }
