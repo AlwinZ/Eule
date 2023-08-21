@@ -46,7 +46,7 @@ zu koennen.
 
 Wenn die Endposition des Schwertes erreicht wird, 
 soll der Motor durch eine Unterbrechung der Stromversorgung
-gestoppt werden. Der Motor läuft etwas nach. Damit würde eine
+gestoppt werden. Der Motor laeuft etwas nach. Damit wuerde eine
 Abfrage der Position des Schwertes immer eine Ueberschreitung
 des Grenzwertes ergeben und den Motorstopp aktivieren. Damit
 wird der Motor dauerhaft ausgeschaltet. 
@@ -63,7 +63,7 @@ staendig neue Werte in den Flashspeicher geschrieben werden,
 kann innerhalb weniger Tage der Flashspeicher kaputt sein.
 Alternativen: Das Schwert muss nachdem der Strom wieder-
 hergestellt wurde neu kalibriert werden. 
-Über eine Echtzeituhr, welche etwas RAM zur Verfuegung stellt,
+Ueber eine Echtzeituhr, welche etwas RAM zur Verfuegung stellt,
 kann der Wert im RAM gespeichert werden. Die Batterie der Echt-
 zeituhr muss nach Entleerung gewechselt werden und es muss 
 neu kalibiert werden.
@@ -77,7 +77,7 @@ neu kalibiert werden.
 #define switchPin 4    // Port fuer den Entlagenschalter, welcher den Motor ausschaltet in Nullposition
 
 
-volatile unsigned int encoderPos = 0;  // Zaehler für die Encoderposition
+volatile unsigned int encoderPos = 0;  // Zaehler fuer die Encoderposition
 unsigned int lastReportedPos = 1;   // Change Mnagement, hat sich die Positon geaendert
 static boolean rotating=false;      // Debounce Management
 
@@ -182,5 +182,6 @@ void calculateSword()
   // Hier kommt die Berechnung der Schwerttiefe rein
   // Die Drehencoderposition wird per 3-Satz in eine
   // Laenge umgerechnet und als Wert zurueckgegeben.
+  // Schwerttiefe = (MaxSchwerttiefe x Count) / MaxCount
   
 }
